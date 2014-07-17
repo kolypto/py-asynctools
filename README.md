@@ -1,15 +1,26 @@
+[![Build Status](https://api.travis-ci.org/kolypto/py-asynctools.png?branch=master)](https://travis-ci.org/kolypto/py-asynctools)
+
+
 AsyncTools
 ==========
 
 Async Tools for Python.
 
+Table of Contents
+=================
+
+* <a href="#user-content-threading">Threading</a>
+    * <a href="#user-content-parallel">Parallel</a>
+    * <a href="#user-content-pool">Pool</a> 
+
 Threading
----------
+=========
 
 Threading is the most simple thing, but because of [GIL](https://wiki.python.org/moin/GlobalInterpreterLock) it's useless for computation.
 Only use when you want to parallelize the access to a blocking resource, e.g. network.
 
-## Parallel
+Parallel
+--------
 
 Source: [asynctools/threading/Parallel.py](asynctools/threading/Parallel.py)
 
@@ -42,7 +53,10 @@ for url in links:
 results, errors = pll.join()
 ```
 
-## Pool
+
+
+Pool
+----
 
 Source: [asynctools/threading/Pool.py](asynctools/threading/Pool.py)
 
