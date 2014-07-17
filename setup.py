@@ -34,7 +34,7 @@ setup(
         'Development Status :: 5 - Production/Stable',
         'Intended Audience :: Developers',
         'Natural Language :: English',
-        'Operating System :: OS Independent'
+        'Operating System :: OS Independent',
         'Programming Language :: Python :: 2',
         #'Programming Language :: Python :: 3',
     ],
