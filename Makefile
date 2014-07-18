@@ -1,10 +1,12 @@
 all:
 
-.PHONY: env test check clean build publish install
+.PHONY: env test test3 check clean build publish install
 
 # Run tests
 test:
-	@./setup.py test
+	@nosetests tests/
+test3:
+	@nosetests3 tests/
 # Package
 check:
 	@./setup.py check

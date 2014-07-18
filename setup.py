@@ -6,7 +6,7 @@ from setuptools import setup, find_packages
 setup(
     # http://pythonhosted.org/setuptools/setuptools.html
     name='asynctools',
-    version='0.1.2-0',
+    version='0.1.2-1',
     author='Mark Vartanyan',
     author_email='mark@dignio.com',
 
@@ -21,10 +21,9 @@ setup(
     entry_points={},
 
     install_requires=[],
-    tests_require=[
-        'nose',
-    ],
-    extras_require={},
+    extras_require={
+        '_tests': ['nose'],
+    },
     include_package_data=True,
     test_suite='nose.collector',
 
