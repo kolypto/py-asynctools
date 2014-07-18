@@ -20,7 +20,7 @@ class ParallelTest(unittest.TestCase):
         """ Test with 3 sleeps """
         pll = self.Cls(self._w_smallsleep)
         times = [0.2, 0.5, 0.8]
-        map(pll.job, times)
+        map(pll, times)
 
         # Should finish quick
         t = timeit()
@@ -36,7 +36,7 @@ class ParallelTest(unittest.TestCase):
         """ Test with 3 sleeps and 1 error """
         pll = self.Cls(self._w_smallsleep)
         times = [0.2, 0.5, 0.8, 2]  # 2 will cause an error
-        map(pll.job, times)
+        pll.map(times)
 
         # Should finish quick
         t = timeit()
@@ -54,7 +54,7 @@ class ParallelTest(unittest.TestCase):
         """ Test with 3 errors """
         pll = self.Cls(self._w_smallsleep)
         times = [2, 3, 4]  # Only errors
-        map(pll.job, times)
+        pll.map(times)
 
         # Should finish quick
         t = timeit()
@@ -83,14 +83,14 @@ class PoolTest(ParallelTest):
         pool = Pool(self._w_smallsleep, 2)
 
         # First set of tasks
-        map(pool.job, [0.1, 0.5, 0.8])
+        pool.map([0.1, 0.5, 0.8])
         t = timeit()
         results, errors = pool.join()
         self.assertAlmostEqual(0.9, t(), delta=0.1)
         self.assertEqual((len(results), len(errors)), (3, 0))
 
         # Second set of tasks: pool still working
-        map(pool.job, [0.1, 0.5, 0.8])
+        pool.map([0.1, 0.5, 0.8])
         t = timeit()
         pool.join()
         self.assertAlmostEqual(0.9, t(), delta=0.1)
@@ -103,4 +103,5 @@ class PoolTest(ParallelTest):
         pool.close()
 
         # Cannot use
-        self.assertRaises(RuntimeError, pool.job, 1)
+        self.assertRaises(RuntimeError, pool, 1)
+        self.assertRaises(RuntimeError, pool.join)

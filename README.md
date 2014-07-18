@@ -29,6 +29,8 @@ Each function is executed in its own thread, all threads exit immediately.
 
 Methods:
 
+* `__call__`: Add a job. Call the `Parallel` object so it calls the worker function with the same arguments
+* `map(jobs)`: Convenience method to call the worker for every argument
 * `join()`: Wait for all tasks to be finished, and return two lists:
     
     * A list of results
@@ -46,11 +48,17 @@ def request(url):
 # Execute
 pll = Parallel(request)
 for url in links:
-    pll.job(url)  # Starts a new thread
+    pll(url)  # Starts a new thread
     
     
 # Wait for the results
 results, errors = pll.join()
+```
+
+Since the request method takes just one argument, this can be chained:
+
+```python
+results, errors = Parallel(request).map(links).join()
 ```
 
 
@@ -66,7 +74,7 @@ Useful if you do want to launch a limited number of long-living threads.
 Methods:
 
 * `join()`: Wait for all tasks to be finished and return `(results, errors)` (same as with [`Pool`](#pool))
-* `close()`: Terminate all threads.
+* `close()`: Terminate all threads. The pool is no more usable when closed.
 * `__enter__`, `__exit__` context manager to be used with `with` statement
 
 Example:
@@ -83,7 +91,7 @@ pool = Pool(request, 5)
 
 # Assign some job
 for url in links:
-    pll.job(url)  # Runs in a pool
+    pll(url)  # Runs in a pool
 
 # Wait for the results
 results, errors = pll.join()

@@ -13,8 +13,7 @@ class Parallel(object):
         """
         self._worker = worker
         self._jobs = Queue()
-        self._results = []
-        self._errors = []
+        self._results , self._errors = [], []
 
     def _spawn_thread(self, target):
         """ Create a thread """
@@ -23,12 +22,15 @@ class Parallel(object):
         t.start()
         return t
 
-    def _terminate_thread(self):
-        """ Put (None,None) in the queue, which is the thread termination signal """
-        self._jobs.put((None, None))  # Termination signal
+    def _add_job(self, args, kwargs):
+        self._jobs.put((args, kwargs))
 
-    def _worker_once(self):
-        """ Worker wrapper that stores results """
+    def _terminate_one_thread(self):
+        """ Put (None,None) in the queue, which is the thread termination signal """
+        self._add_job(None, None)
+
+    def _thread(self):
+        """ Thread entry point: does the job once, stored results, and dies. """
         # Get
         args, kwargs = self._jobs.get()
 
@@ -44,13 +46,16 @@ class Parallel(object):
         finally:
             self._jobs.task_done()
 
-    def job(self, *args, **kwargs):
-        """ Add a job. Arguments are directly passed to the worker """
-        self._jobs.put((args, kwargs))
+    def map(self, jobs):
+        map(self, jobs)
+        return self
 
-        # Spawn a thread if needed
+    def __call__(self, *args, **kwargs):
+        """ Add a job. Arguments are directly passed to the worker """
+        self._add_job(args, kwargs)
         if self._class == 'Parallel':
-            self._spawn_thread(self._worker_once)
+            self._spawn_thread(self._thread)
+        return self
 
     def join(self):
         """ Wait for all current tasks to be finished """

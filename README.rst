@@ -1,10 +1,20 @@
+|Build Status|
+
 AsyncTools
 ==========
 
 Async Tools for Python.
 
+Table of Contents
+=================
+
+-  Threading
+
+   -  Parallel
+   -  Pool
+
 Threading
----------
+=========
 
 Threading is the most simple thing, but because of
 `GIL <https://wiki.python.org/moin/GlobalInterpreterLock>`__ it's
@@ -22,6 +32,10 @@ executed in its own thread, all threads exit immediately.
 
 Methods:
 
+-  ``__call__``: Add a job. Call the ``Parallel`` object so it calls the
+   worker function with the same arguments
+-  ``map(jobs)``: Convenience method to call the worker for every
+   argument
 -  ``join()``: Wait for all tasks to be finished, and return two lists:
 
    -  A list of results
@@ -40,11 +54,17 @@ Example:
     # Execute
     pll = Parallel(request)
     for url in links:
-        pll.job(url)  # Starts a new thread
+        pll(url)  # Starts a new thread
         
         
     # Wait for the results
     results, errors = pll.join()
+
+Since the request method takes just one argument, this can be chained:
+
+.. code:: python
+
+    results, errors = Parallel(request).map(links).join()
 
 Pool
 ----
@@ -58,7 +78,8 @@ Methods:
 
 -  ``join()``: Wait for all tasks to be finished and return
    ``(results, errors)`` (same as with ```Pool`` <#pool>`__)
--  ``close()``: Terminate all threads.
+-  ``close()``: Terminate all threads. The pool is no more usable when
+   closed.
 -  ``__enter__``, ``__exit__`` context manager to be used with ``with``
    statement
 
@@ -77,8 +98,10 @@ Example:
 
     # Assign some job
     for url in links:
-        pll.job(url)  # Runs in a pool
+        pll(url)  # Runs in a pool
 
     # Wait for the results
     results, errors = pll.join()
 
+.. |Build Status| image:: https://api.travis-ci.org/kolypto/py-asynctools.png?branch=master
+   :target: https://travis-ci.org/kolypto/py-asynctools
