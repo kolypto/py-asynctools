@@ -6,7 +6,7 @@ from setuptools import setup, find_packages
 setup(
     # http://pythonhosted.org/setuptools/setuptools.html
     name='asynctools',
-    version='0.1.0-0',
+    version='0.1.2-0',
     author='Mark Vartanyan',
     author_email='mark@dignio.com',
 

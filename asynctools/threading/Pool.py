@@ -17,7 +17,7 @@ class Pool(Parallel):
 
     def _thread(self):
         """ Worker that continuously fetches tasks """
-        while super(Pool, self)._thread() is not False: pass
+        while super(Pool, self)._thread() is not None: pass
 
     def close(self):
         # Terminate threads

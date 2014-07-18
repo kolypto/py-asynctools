@@ -1,4 +1,4 @@
-from threading import Thread, Event
+from threading import Thread, Condition
 from Queue import Queue
 
 
@@ -13,7 +13,8 @@ class Parallel(object):
         """
         self._worker = worker
         self._jobs = Queue()
-        self._results , self._errors = [], []
+        self._results, self._errors = [], []
+        self._jobfinished = Condition()
 
     def _spawn_thread(self, target):
         """ Create a thread """
@@ -36,15 +37,19 @@ class Parallel(object):
 
         # Stop thread when (None, None) comes in
         if args is None and kwargs is None:
-            return False  # Top-level loopers should exit as well
+            return None  # Wrappers should exit as well
 
         # Work
         try:
             self._results.append(self._worker(*args, **kwargs))
+            return True
         except Exception as e:
             self._errors.append(e)
+            return False
         finally:
             self._jobs.task_done()
+            with self._jobfinished:
+                self._jobfinished.notify()
 
     def map(self, jobs):
         map(self, jobs)
@@ -56,6 +61,20 @@ class Parallel(object):
         if self._class == 'Parallel':
             self._spawn_thread(self._thread)
         return self
+
+    def first(self, timeout=None):
+        """ Wait for the first successful result to become available
+        :param timeout: Wait timeout, sec
+        :type timeout: float|int|None
+        :return: result, or None if all threads have failed
+        :rtype: *
+        """
+        while True:
+            with self._jobfinished:
+                if self._results or not self._jobs.unfinished_tasks:
+                    break
+                self._jobfinished.wait(timeout)
+        return self._results[0] if self._results else None
 
     def join(self):
         """ Wait for all current tasks to be finished """
