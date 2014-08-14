@@ -6,9 +6,9 @@ from setuptools import setup, find_packages
 setup(
     # http://pythonhosted.org/setuptools/setuptools.html
     name='asynctools',
-    version='0.1.2-1',
+    version='0.1.2-2',
     author='Mark Vartanyan',
-    author_email='mark@dignio.com',
+    author_email='kolypto@gmail.com',
 
     url='https://github.com/kolypto/py-asynctools',
     license='BSD',
@@ -22,7 +22,7 @@ setup(
 
     install_requires=[],
     extras_require={
-        '_tests': ['nose'],
+        '_dev': ['wheel', 'nose'],
     },
     include_package_data=True,
     test_suite='nose.collector',
