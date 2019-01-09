@@ -6,14 +6,15 @@ from setuptools import setup, find_packages
 setup(
     # http://pythonhosted.org/setuptools/setuptools.html
     name='asynctools',
-    version='0.1.2-2',
+    version='0.1.3',
     author='Mark Vartanyan',
     author_email='kolypto@gmail.com',
 
     url='https://github.com/kolypto/py-asynctools',
     license='BSD',
     description=__doc__,
-    long_description=open('README.rst').read(),
+    long_description=open('README.md').read(),
+    long_description_content_type='text/markdown',
     keywords=['async', 'threading', 'multiprocessing'],
 
     packages=find_packages(),
@@ -21,9 +22,7 @@ setup(
     entry_points={},
 
     install_requires=[],
-    extras_require={
-        '_dev': ['wheel', 'nose'],
-    },
+    extras_require={},
     include_package_data=True,
     test_suite='nose.collector',
 
@@ -35,6 +34,7 @@ setup(
         'Natural Language :: English',
         'Operating System :: OS Independent',
         'Programming Language :: Python :: 2',
-        #'Programming Language :: Python :: 3',
+        'Programming Language :: Python :: 3',
+        'Topic :: Software Development :: Libraries :: Python Modules',
     ],
 )
