@@ -1,6 +1,9 @@
 from threading import Thread, Condition
-from Queue import Queue
 
+try:
+    from Queue import Queue
+except ImportError:
+    from queue import Queue
 
 class Parallel(object):
     """ Execute all tasks in parallel, once """
@@ -52,7 +55,8 @@ class Parallel(object):
                 self._jobfinished.notify()
 
     def map(self, jobs):
-        map(self, jobs)
+        for j in jobs:
+            self(j)
         return self
 
     def __call__(self, *args, **kwargs):

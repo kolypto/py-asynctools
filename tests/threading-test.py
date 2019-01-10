@@ -18,7 +18,8 @@ class AsyncTest(unittest.TestCase):
     def test_async(self):
         """ Run 3 tasks, don't wait """
         t = timeit()
-        map(self._w_sleep, (0.1, 0.5, 0.8))
+        for _ in (0.1, 0.5, 0.8):
+            self._w_sleep(_)
         self.assertAlmostEqual(0.0, t(), delta=0.1)
 
     def test_async_wait(self):
@@ -49,7 +50,8 @@ class ParallelTest(unittest.TestCase):
         """ Test with 3 sleeps """
         pll = self.Cls(self._w_smallsleep)
         times = [0.2, 0.5, 0.8]
-        map(pll, times)
+        for _ in times:
+            pll(_)
 
         # Should finish quick
         t = timeit()
