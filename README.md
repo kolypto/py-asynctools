@@ -18,8 +18,8 @@ Table of Contents
 Threading
 =========
 
-Threading is the most simple thing, but because of [GIL](https://wiki.python.org/moin/GlobalInterpreterLock) it's useless for computation.
-Only use when you want to parallelize the access to a blocking resource, e.g. network.
+In Python, threading only makes sense to run blocking calls concurrently: e.g. accessing network resources.
+Threading is useless for computations because of  [GIL](https://wiki.python.org/moin/GlobalInterpreterLock).
 
 Async
 -----

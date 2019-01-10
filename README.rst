@@ -1,4 +1,5 @@
-|Build Status|
+`Build Status <https://travis-ci.org/kolypto/py-asynctools>`__
+`Pythons <.travis.yml>`__
 
 AsyncTools
 ==========
@@ -17,10 +18,10 @@ Table of Contents
 Threading
 =========
 
-Threading is the most simple thing, but because of
-`GIL <https://wiki.python.org/moin/GlobalInterpreterLock>`__ it's
-useless for computation. Only use when you want to parallelize the
-access to a blocking resource, e.g. network.
+In Python, threading only makes sense to run blocking calls
+concurrently: e.g. accessing network resources. Threading is useless for
+computations because of
+`GIL <https://wiki.python.org/moin/GlobalInterpreterLock>`__.
 
 Async
 -----
@@ -34,14 +35,14 @@ the function is called, it returns a
 
 .. code:: python
 
-    from asynctools.threading import Async
+   from asynctools.threading import Async
 
-    @Async
-    def request(url):
-        # ... do request
-        
-    request('http://example.com')  # Async request
-    request('http://example.com').wait()  # wait for it to complete
+   @Async
+   def request(url):
+       # ... do request
+       
+   request('http://example.com')  # Async request
+   request('http://example.com').wait()  # wait for it to complete
 
 If you want to wait for multiple threads to complete, see next chapters.
 
@@ -62,7 +63,7 @@ Methods:
    argument
 -  ``first(timeout=None)``: Wait for a single result to be available,
    with an optional timeout in seconds. The result is returned as soon
-   as it's ready. If all threads fail with an error -- ``None`` is
+   as it’s ready. If all threads fail with an error – ``None`` is
    returned.
 -  ``join()``: Wait for all tasks to be finished, and return two lists:
 
@@ -73,26 +74,26 @@ Example:
 
 .. code:: python
 
-    from asynctools.threading import Parallel
+   from asynctools.threading import Parallel
 
-    def request(url):
-        # ... do request
-        return data
+   def request(url):
+       # ... do request
+       return data
+      
+   # Execute
+   pll = Parallel(request)
+   for url in links:
+       pll(url)  # Starts a new thread
        
-    # Execute
-    pll = Parallel(request)
-    for url in links:
-        pll(url)  # Starts a new thread
-        
-        
-    # Wait for the results
-    results, errors = pll.join()
+       
+   # Wait for the results
+   results, errors = pll.join()
 
 Since the request method takes just one argument, this can be chained:
 
 .. code:: python
 
-    results, errors = Parallel(request).map(links).join()
+   results, errors = Parallel(request).map(links).join()
 
 Pool
 ----
@@ -116,21 +117,18 @@ Example:
 
 .. code:: python
 
-    from asynctools.threading import Pool
+   from asynctools.threading import Pool
 
-    def request(url):
-        # ... do long request
-        return data
-       
-    # Make pool
-    pool = Pool(request, 5)
+   def request(url):
+       # ... do long request
+       return data
+      
+   # Make pool
+   pool = Pool(request, 5)
 
-    # Assign some job
-    for url in links:
-        pll(url)  # Runs in a pool
+   # Assign some job
+   for url in links:
+       pll(url)  # Runs in a pool
 
-    # Wait for the results
-    results, errors = pll.join()
-
-.. |Build Status| image:: https://api.travis-ci.org/kolypto/py-asynctools.png?branch=master
-   :target: https://travis-ci.org/kolypto/py-asynctools
+   # Wait for the results
+   results, errors = pll.join()
